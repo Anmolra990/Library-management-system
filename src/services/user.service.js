@@ -1,5 +1,6 @@
 import UserModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 class UserService {
 
     async registerUser(name, email, password, role = "user") {
@@ -10,12 +11,14 @@ class UserService {
             throw new Error("Email already registered");
         }
 
-        const result = await UserModel.createUser(
-            name,
-            email,
-            password,
-            role
-        );
+       const hashedPassword = await bcrypt.hash(password, 10);
+
+       const result = await UserModel.createUser(
+      name,
+      email,
+      hashedPassword,
+      role
+    );
 
         return {
             id: result.insertId,
