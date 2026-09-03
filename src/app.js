@@ -1,5 +1,8 @@
 import express from "express";
-import db from "./database/connections.js";
+import db from "./database/connection.js";
+import userRoutes from "./routes/user.routes.js";
+import bookRoutes from "./routes/book.routes.js";
+import borrowingRoutes from "./routes/borrowing.routes.js";
 
 const app = express();
 
@@ -26,5 +29,10 @@ app.get("/test-db", async (req, res) => {
         });
     }
 });
+app.use("/api/users", userRoutes);
+
+app.use("/api/books", bookRoutes);
+
+app.use("/api/borrowings", borrowingRoutes);
 
 export default app;
