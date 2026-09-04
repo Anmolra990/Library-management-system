@@ -14,6 +14,12 @@ router.get(
     BorrowingController.getUserBorrowings
 );
 
+router.get(
+    "/my-history",
+    authMiddleware,
+    BorrowingController.getMyBorrowings
+);
+
 router.put(
     "/:id/return",
     authMiddleware,

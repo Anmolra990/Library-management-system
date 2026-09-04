@@ -29,14 +29,15 @@ class UserService {
     }
 
     async loginUser(email, password) {
-
     const user = await UserModel.findUserByEmailWithPassword(email);
 
     if (!user) {
         throw new Error("Invalid email or password");
     }
 
-    if (user.password !== password) {
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
         throw new Error("Invalid email or password");
     }
 
