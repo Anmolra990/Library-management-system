@@ -6,7 +6,7 @@ class BorrowingService {
 
     async borrowBook(userId, bookId) {
 
-        // Check user
+      
         const user = await UserModel.findUserById(userId);
 
         if (!user) {
@@ -14,7 +14,7 @@ class BorrowingService {
         }
 
 
-        // Check book
+       
         const book = await BookModel.getBookById(bookId);
 
         if (!book) {
@@ -22,20 +22,20 @@ class BorrowingService {
         }
 
 
-        // Check availability
+      
         if (book.available_quantity <= 0) {
             throw new Error("Book is not available");
         }
 
 
-        // Create borrowing
+    
         const result = await BorrowingModel.createBorrowing(
             userId,
             bookId
         );
 
 
-        // Decrease available quantity
+
         await BorrowingModel.updateBookQuantity(bookId);
 
 

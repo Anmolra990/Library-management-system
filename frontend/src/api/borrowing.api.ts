@@ -1,10 +1,12 @@
 import api from "./axios";
 import type { Borrowing } from "../types/borrowing";
 
-export const borrowBook = async (
+export const BorrowingAPI = async (
   bookId: number
 ): Promise<void> => {
-  await api.post("/borrowings", { bookId });
+  await api.post("/borrowings", {
+    bookId,
+  });
 };
 
 export const getMyBorrowings = async (): Promise<
@@ -32,3 +34,5 @@ export const returnBook = async (
 ): Promise<void> => {
   await api.put(`/borrowings/${borrowingId}/return`);
 };
+
+
