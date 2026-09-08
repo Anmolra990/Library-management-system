@@ -23,8 +23,7 @@ const currencyFormatter = new Intl.NumberFormat("en-IN", {
 
 function parseDate(value?: string | null) {
   if (!value) return undefined;
-  // Date-only SQL values are parsed as UTC by JavaScript. Noon keeps the
-  // displayed day correct for users in time zones ahead of UTC.
+
   return /^\d{4}-\d{2}-\d{2}$/.test(value) ? new Date(`${value}T12:00:00`) : new Date(value);
 }
 
@@ -36,13 +35,36 @@ function formatDate(value?: string | null) {
 }
 
 function getBook(row: Borrowing): Book | undefined {
-  return row.Book ?? row.book;
+  const nestedBook = row.Book ?? row.book;
+
+  if (nestedBook) {
+    return nestedBook;
+  }
+
+  if (!row.title) {
+    return undefined;
+  }
+
+  return {
+    id: row.bookId ?? row.book_id ?? 0,
+    title: row.title,
+    author: row.author ?? "Unknown author",
+    category: row.category,
+    isbn: row.isbn,
+    ISBN: row.ISBN,
+    totalCopies: 0,
+    availableCopies: 0,
+  };
 }
 
 function getBorrowedDate(row: Borrowing) {
-  return row.borrowedAt ?? row.borrowDate ?? row.createdAt;
+  return (
+    row.borrowedAt ??
+    row.borrowDate ??
+    row.borrowed_date ??
+    row.createdAt
+  );
 }
-
 function getStatus(row: Borrowing): BorrowingStatus {
   const status = row.status?.toUpperCase();
   if (status === "RETURNED" || row.returnedAt || row.returnDate) return "RETURNED";
@@ -205,7 +227,7 @@ export default function MyBorrowingsPage() {
             </button>
           </div>
         </div>
-        <div className="absolute -right-8 -top-12 text-[12rem] leading-none opacity-15" aria-hidden="true">📚</div>
+        <div className="display-font absolute -right-8 -top-12 text-[12rem] leading-none opacity-15" aria-hidden="true">L</div>
         <div className="absolute -bottom-24 right-24 h-56 w-56 rounded-full bg-white/10 blur-3xl" aria-hidden="true" />
       </div>
 
@@ -306,7 +328,7 @@ export default function MyBorrowingsPage() {
                     <tr key={row.id} className="transition hover:bg-slate-50/80">
                       <td className="px-5 py-4">
                         <div className="flex min-w-[220px] items-center gap-3">
-                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-100 to-violet-100 text-xl" aria-hidden="true">📖</div>
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sky-50 font-bold text-sky-700" aria-hidden="true">{book?.title?.charAt(0).toUpperCase() ?? "B"}</div>
                           <div>
                             <p className="font-semibold text-slate-900">{book?.title ?? `Book #${row.bookId ?? "—"}`}</p>
                             <p className="mt-0.5 text-xs text-slate-500">{book?.author ? `by ${book.author}` : "Library book"}</p>
@@ -342,7 +364,7 @@ export default function MyBorrowingsPage() {
               return (
                 <article key={row.id} className="p-4 sm:p-5">
                   <div className="flex items-start gap-3">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-100 to-violet-100 text-xl" aria-hidden="true">📖</div>
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-sky-50 font-bold text-sky-700" aria-hidden="true">{book?.title?.charAt(0).toUpperCase() ?? "B"}</div>
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-start justify-between gap-2">
                         <div>
@@ -367,7 +389,7 @@ export default function MyBorrowingsPage() {
         </div>
       ) : (
         <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center shadow-sm">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50 text-3xl" aria-hidden="true">📚</div>
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-50 text-2xl font-bold text-sky-700" aria-hidden="true">L</div>
           <h2 className="mt-4 text-lg font-semibold text-slate-900">{rows.length ? "No matching borrowings" : "No borrowing history yet"}</h2>
           <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
             {rows.length ? "Try a different search term or status filter." : "Borrow a book from the collection and it will appear here with its dates and status."}

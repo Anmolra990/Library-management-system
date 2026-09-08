@@ -1,91 +1,81 @@
 import db from "../database/connection.js";
 
 class BorrowingModel {
-
-    async createBorrowing(userId, bookId) {
-
-        const [result] = await db.query(
-            `INSERT INTO borrowings
+  async createBorrowing(userId, bookId) {
+    const [result] = await db.query(
+      `INSERT INTO borrowings
             (user_id, book_id, borrowed_date, status)
             VALUES (?, ?, CURDATE(), 'borrowed')`,
-            [userId, bookId]
-        );
+      [userId, bookId],
+    );
 
-        return result;
-    }
+    return result;
+  }
 
+  async getBorrowingById(id) {
+    const [rows] = await db.query("SELECT * FROM borrowings WHERE id = ?", [
+      id,
+    ]);
 
-    async getBorrowingById(id) {
+    return rows[0];
+  }
 
-        const [rows] = await db.query(
-            "SELECT * FROM borrowings WHERE id = ?",
-            [id]
-        );
+  async getUserBorrowings(userId) {
+    const [rows] = await db.query(
+        `SELECT
+            borrowings.id,
+            borrowings.book_id AS bookId,
+            books.title,
+            books.author,
+            borrowings.borrowed_date AS borrowedAt,
+            borrowings.returned_date AS returnedAt,
+            borrowings.status
+         FROM borrowings
+         JOIN books
+            ON borrowings.book_id = books.id
+         WHERE borrowings.user_id = ?
+         ORDER BY borrowings.id DESC`,
+        [userId]
+    );
 
-        return rows[0];
-    }
+    return rows;
+}
 
-
-    async getUserBorrowings(userId) {
-
-        const [rows] = await db.query(
-            `SELECT
-                borrowings.id,
-                books.title,
-                books.author,
-                borrowings.borrowed_date,
-                borrowings.returned_date,
-                borrowings.status
-             FROM borrowings
-             JOIN books ON borrowings.book_id = books.id
-             WHERE borrowings.user_id = ?
-             ORDER BY borrowings.id DESC`,
-            [userId]
-        );
-
-        return rows;
-    }
-
-
-    async updateBookQuantity(bookId) {
-
-        const [result] = await db.query(
-            `UPDATE books
+  async updateBookQuantity(bookId) {
+    const [result] = await db.query(
+      `UPDATE books
              SET available_quantity = available_quantity - 1
              WHERE id = ?
              AND available_quantity > 0`,
-            [bookId]
-        );
+      [bookId],
+    );
 
-        return result;
-    }
-    async returnBook(borrowingId) {
-
+    return result;
+  }
+  async returnBook(borrowingId) {
     const [result] = await db.query(
-        `UPDATE borrowings
+      `UPDATE borrowings
          SET returned_date = CURDATE(),
              status = 'returned'
          WHERE id = ?
          AND status = 'borrowed'`,
-        [borrowingId]
+      [borrowingId],
     );
 
     return result;
-}
+  }
 
-async increaseBookQuantity(bookId) {
-
+  async increaseBookQuantity(bookId) {
     const [result] = await db.query(
-        `UPDATE books
+      `UPDATE books
          SET available_quantity = available_quantity + 1
          WHERE id = ?`,
-        [bookId]
+      [bookId],
     );
 
     return result;
-}
-async getAllBorrowings() {
-
+  }
+  async getAllBorrowings() {
     const [rows] = await db.query(`
         SELECT
             borrowings.id,
@@ -105,7 +95,7 @@ async getAllBorrowings() {
     `);
 
     return rows;
-}
+  }
 }
 
 export default new BorrowingModel();

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getAllBorrowings } from "../../api/borrowing.api";
+import {BorrowingAPI } from "../../api/borrowing.api";
 
 import type { Borrowing } from "../../types/borrowing";
 
@@ -10,7 +10,7 @@ export default function BorrowingsPage() {
   >([]);
 
   useEffect(() => {
-    void getAllBorrowings().then(setBorrowings);
+    void BorrowingAPI.getAll().then(setBorrowings);
   }, []);
 
   return (

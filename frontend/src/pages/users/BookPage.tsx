@@ -63,7 +63,7 @@ export default function BookPage() {
     setBorrowingId(bookId);
 
     try {
-      await BorrowingAPI(bookId);
+      await BorrowingAPI.create(bookId);
 
       setMessage("Book borrowed successfully");
 
@@ -84,16 +84,16 @@ export default function BookPage() {
 
   return (
     <main className="space-y-8">
-      <section className="rounded-3xl bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-600 p-8 text-white shadow-xl">
-        <p className="text-sm uppercase tracking-widest text-indigo-200">
+      <section className="rounded-[2rem] bg-slate-950 p-7 text-white shadow-xl sm:p-10">
+        <p className="text-sm font-semibold uppercase tracking-[0.22em] text-sky-300">
           Library collection
         </p>
 
-        <h1 className="mt-3 text-4xl font-bold">
+        <h1 className="display-font mt-3 text-4xl leading-tight sm:text-5xl">
           Find your next great book
         </h1>
 
-        <p className="mt-3 max-w-xl text-indigo-100">
+        <p className="mt-3 max-w-xl leading-7 text-slate-300">
           Browse our collection, search by title or author,
           and borrow books instantly.
         </p>
@@ -106,7 +106,7 @@ export default function BookPage() {
             onChange={(event) =>
               setSearch(event.target.value)
             }
-            className="w-full rounded-xl bg-white px-4 py-3 text-slate-800 outline-none placeholder:text-slate-400 md:max-w-lg"
+            className="w-full rounded-xl border border-white/10 bg-white px-4 py-3 text-slate-800 outline-none placeholder:text-slate-400 focus:ring-4 focus:ring-sky-300/30 md:max-w-lg"
           />
 
           <select
@@ -114,7 +114,7 @@ export default function BookPage() {
             onChange={(event) =>
               setCategory(event.target.value)
             }
-            className="rounded-xl bg-white px-4 py-3 text-slate-800 outline-none"
+            className="rounded-xl bg-white px-4 py-3 text-slate-800 outline-none focus:ring-4 focus:ring-sky-300/30"
           >
             {categories.map((item) => (
               <option key={item} value={item}>
@@ -126,7 +126,7 @@ export default function BookPage() {
       </section>
 
       {message && (
-        <div className="rounded-xl bg-indigo-50 p-4 font-medium text-indigo-700">
+        <div role="status" className="rounded-xl border border-sky-200 bg-sky-50 p-4 font-medium text-sky-700">
           {message}
         </div>
       )}
@@ -172,11 +172,11 @@ export default function BookPage() {
               return (
                 <article
                   key={book.id}
-                  className="group overflow-hidden rounded-2xl bg-white shadow-md transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                    className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-sky-200 hover:shadow-xl"
                 >
-                  <div className="relative flex h-48 items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
-                    <div className="text-7xl transition duration-300 group-hover:scale-110">
-                      📚
+                  <div className="relative flex h-48 items-center justify-center overflow-hidden bg-slate-900">
+                    <div className="display-font text-7xl text-sky-300 transition duration-300 group-hover:scale-110">
+                      {book.title.charAt(0).toUpperCase()}
                     </div>
 
                     <span className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-indigo-700">
@@ -211,7 +211,7 @@ export default function BookPage() {
 
                       <div className="h-2 overflow-hidden rounded-full bg-slate-200">
                         <div
-                          className="h-full rounded-full bg-emerald-500"
+                          className={`h-full rounded-full ${isUnavailable ? "bg-rose-500" : "bg-sky-500"}`}
                           style={{
                             width: `${percentage}%`,
                           }}
@@ -228,7 +228,7 @@ export default function BookPage() {
                       onClick={() =>
                         void handleBorrow(book.id)
                       }
-                      className="mt-5 w-full rounded-xl bg-indigo-600 py-3 font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+                      className="mt-5 w-full rounded-xl bg-slate-900 py-3 font-semibold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-300"
                     >
                       {borrowingId === book.id
                         ? "Borrowing..."
@@ -246,7 +246,7 @@ export default function BookPage() {
         )}
 
         {!loading && filteredBooks.length === 0 && (
-          <div className="rounded-2xl bg-white p-12 text-center shadow">
+          <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center shadow-sm">
             <p className="text-lg font-semibold text-slate-700">
               No books found
             </p>

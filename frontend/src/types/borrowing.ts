@@ -16,4 +16,12 @@ export interface Borrowing {
   book?: Book;
   User?: User;
   user?: User;
+  title?: string;
+author?: string;
+category?: string;
+isbn?: string;
+ISBN?: string;
+book_id?: number;
+borrowed_date?: string;
+returned_date?: string | null;
 }

@@ -37,24 +37,25 @@ class BorrowingController {
   }
 
   async getMyBorrowings(req, res) {
-    try {
-      const userId = req.user.id;
+  try {
+    console.log("Logged-in user:", req.user);
 
-      const borrowings =
-        await BorrowingService.getUserBorrowings(
-          userId
-        );
+    const userId = req.user.id;
+    const borrowings = await BorrowingService.getUserBorrowings(userId);
 
-      res.status(200).json({
-        count: borrowings.length,
-        borrowings,
-      });
-    } catch (error) {
-      res.status(400).json({
-        message: error.message,
-      });
-    }
+    console.log("User ID:", userId);
+    console.log("Borrowings:", borrowings);
+
+    res.status(200).json({
+      count: borrowings.length,
+      borrowings,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+    });
   }
+}
 
   async getUserBorrowings(req, res) {
     try {

@@ -9,6 +9,8 @@ export interface Book {
   totalCopies: number;
   availableCopies: number;
   status?: "ACTIVE" | "INACTIVE";
+  quantity?: number;
+available_quantity?: number;
 }
 
 export interface BookInput {

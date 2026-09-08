@@ -22,7 +22,7 @@ export const createBook = async (
 ): Promise<Book> => {
   const response = await api.post<{ book: Book }>(
     "/books",
-    data
+    convertBookData(data)
   );
 
   return response.data.book;
@@ -34,14 +34,34 @@ export const updateBook = async (
 ): Promise<Book> => {
   const response = await api.put<{ book: Book }>(
     `/books/${id}`,
-    data
+    convertBookData(data)
   );
 
   return response.data.book;
 };
 
+const convertBookData = (data: Partial<BookInput>) => ({
+  title: data.title,
+  author: data.author,
+  ISBN: data.isbn,
+  category: data.category,
+  description: data.description ?? null,
+
+  // MySQL column names
+  quantity: Number(data.totalCopies),
+  available_quantity: Number(data.availableCopies),
+});
+
 export const deleteBook = async (
   id: number
 ): Promise<void> => {
   await api.delete(`/books/${id}`);
+};
+export const bookApi = {
+  getAll: getAllBooks,
+  getById: getBookById,
+  create: createBook,
+  update: updateBook,
+  remove: deleteBook,
+  convertData: convertBookData,
 };
