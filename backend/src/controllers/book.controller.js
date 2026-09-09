@@ -5,6 +5,9 @@ class BookController {
     async createBook(req, res) {
 
         try {
+            if (req.file) {
+                req.body.image_url = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+            }
 
             const book = await BookService.createBook(req.body);
 
@@ -69,6 +72,9 @@ class BookController {
     async updateBook(req, res) {
 
         try {
+            if (req.file) {
+                req.body.image_url = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+            }
 
             const book = await BookService.updateBook(
                 req.params.id,

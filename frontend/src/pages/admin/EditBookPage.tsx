@@ -23,6 +23,7 @@ export default function EditBookPage() {
   isbn: book.isbn ?? book.ISBN ?? "",
   category: book.category ?? "",
   description: book.description ?? "",
+  imageUrl: book.imageUrl ?? book.image_url ?? "",
   totalCopies: Number(
     book.totalCopies ?? book.quantity ?? 0
   ),

@@ -24,4 +24,6 @@ ISBN?: string;
 book_id?: number;
 borrowed_date?: string;
 returned_date?: string | null;
+  user_name?: string;
+  email?: string;
 }

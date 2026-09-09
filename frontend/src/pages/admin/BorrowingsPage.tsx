@@ -8,9 +8,23 @@ export default function BorrowingsPage() {
   const [borrowings, setBorrowings] = useState<
     Borrowing[]
   >([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    void BorrowingAPI.getAll().then(setBorrowings);
+    const loadBorrowings = async () => {
+      try {
+        setError("");
+        setBorrowings(await BorrowingAPI.getAll());
+      } catch (loadError) {
+        setError(
+          loadError instanceof Error
+            ? loadError.message
+            : "Unable to load borrowing records."
+        );
+      }
+    };
+
+    void loadBorrowings();
   }, []);
 
   return (
@@ -18,6 +32,12 @@ export default function BorrowingsPage() {
       <h1 className="mb-6 text-3xl font-bold">
         All Borrowings
       </h1>
+
+      {error && (
+        <div role="alert" className="mb-4 rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+          {error}
+        </div>
+      )}
 
       <div className="overflow-x-auto rounded-xl bg-white shadow">
         <table className="w-full text-left">
@@ -44,19 +64,19 @@ export default function BorrowingsPage() {
                   className="border-t"
                 >
                   <td className="p-4">
-                    {user?.name ??
+                    {borrowing.user_name ?? user?.name ??
                       `User ${borrowing.userId}`}
                   </td>
 
                   <td className="p-4">
-                    {book?.title ??
+                    {borrowing.title ?? book?.title ??
                       `Book ${borrowing.bookId}`}
                   </td>
 
                   <td className="p-4">
-                    {borrowing.dueDate
+                    {borrowing.dueDate ?? borrowing.borrowed_date
                       ? new Date(
-                          borrowing.dueDate
+                          borrowing.dueDate ?? borrowing.borrowed_date ?? ""
                         ).toLocaleDateString()
                       : "—"}
                   </td>

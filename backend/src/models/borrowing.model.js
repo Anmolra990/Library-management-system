@@ -20,6 +20,10 @@ class BorrowingModel {
     return rows[0];
   }
 
+  async deleteBorrowing(id) {
+    await db.query("DELETE FROM borrowings WHERE id = ?", [id]);
+  }
+
   async getUserBorrowings(userId) {
     const [rows] = await db.query(
         `SELECT

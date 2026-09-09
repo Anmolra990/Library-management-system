@@ -1,11 +1,14 @@
 import express from "express";
 import cors from "cors";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import db from "./database/connection.js";
 import userRoutes from "./routes/user.routes.js";
 import bookRoutes from "./routes/book.routes.js";
 import borrowingRoutes from "./routes/borrowing.routes.js";
 
 const app = express();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 app.use(
   cors({
@@ -14,6 +17,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.get("/", (req, res) => {
   res.json({

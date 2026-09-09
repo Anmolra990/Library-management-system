@@ -7,6 +7,7 @@ const emptyBook: BookInput = {
   isbn: "",
   category: "",
   description: "",
+  imageUrl: "",
   totalCopies: 1,
   availableCopies: 1,
 };
@@ -105,6 +106,7 @@ export default function BookForm({
         isbn: values.isbn.trim(),
         category: values.category.trim(),
         description: values.description?.trim() ?? "",
+        imageUrl: values.imageUrl?.trim() ?? "",
       });
     } catch (submitError) {
       setError(getErrorMessage(submitError));
@@ -238,6 +240,44 @@ export default function BookForm({
               updateField("description", event.target.value)
             }
           />
+        </label>
+
+        <label className="block text-sm font-semibold text-slate-700">
+          Cover image URL
+          <input
+            type="url"
+            className={inputClass}
+            value={values.imageUrl ?? ""}
+            placeholder="https://example.com/book-cover.jpg"
+            onChange={(event) =>
+              updateField("imageUrl", event.target.value)
+            }
+          />
+          <span className="mt-2 block text-xs font-normal text-slate-500">
+            Paste a public image link or choose an image from your computer.
+          </span>
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            className="mt-3 block w-full text-sm font-normal text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-sky-50 file:px-3 file:py-2 file:font-semibold file:text-sky-700 hover:file:bg-sky-100"
+            onChange={(event) => {
+              const imageFile = event.target.files?.[0];
+              if (imageFile) {
+                updateField("imageFile", imageFile);
+                updateField("imageUrl", URL.createObjectURL(imageFile));
+              }
+            }}
+          />
+          {values.imageUrl && (
+            <img
+              src={values.imageUrl}
+              alt="Book cover preview"
+              className="mt-3 h-40 w-28 rounded-xl object-cover shadow-sm"
+              onError={(event) => {
+                event.currentTarget.style.display = "none";
+              }}
+            />
+          )}
         </label>
 
         <div className="flex flex-col-reverse gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:justify-end">

@@ -2,13 +2,13 @@ import db from "../database/connection.js";
 
 class BookModel {
 
-    async createBook(title, author, category, isbn, quantity) {
+    async createBook(title, author, category, isbn, quantity, imageUrl) {
 
         const [result] = await db.query(
             `INSERT INTO books
-            (title, author, category, isbn, quantity, available_quantity)
-            VALUES (?, ?, ?, ?, ?, ?)`,
-            [title, author, category, isbn, quantity, quantity]
+            (title, author, category, isbn, quantity, available_quantity, image_url)
+            VALUES (?, ?, ?, ?, ?, ?, ?)` ,
+            [title, author, category, isbn, quantity, quantity, imageUrl]
         );
 
         return result;
@@ -36,7 +36,7 @@ class BookModel {
     }
 
 
-    async updateBook(id, title, author, category, isbn, quantity) {
+    async updateBook(id, title, author, category, isbn, quantity, imageUrl) {
 
         const [result] = await db.query(
             `UPDATE books
@@ -45,9 +45,10 @@ class BookModel {
                  category = ?,
                  isbn = ?,
                  quantity = ?,
-                 available_quantity = ?
+                  available_quantity = ?,
+                  image_url = ?
              WHERE id = ?`,
-            [title, author, category, isbn, quantity, quantity, id]
+              [title, author, category, isbn, quantity, quantity, imageUrl, id]
         );
 
         return result;

@@ -35,6 +35,10 @@ export const borrowingApi = {
     await api.post("/borrowings", { bookId });
   },
 
+  async create(bookId: number): Promise<void> {
+    await this.borrow(bookId);
+  },
+
   async getMine(): Promise<Borrowing[]> {
     const response = await api.get("/borrowings/my-history");
     return extractBorrowings(response.data);

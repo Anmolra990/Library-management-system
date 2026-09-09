@@ -42,7 +42,11 @@ export function AuthProvider({
 
   useEffect(() => {
     const loadUserProfile = async () => {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
+
+      // Remove tokens from older versions that used shared browser storage.
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
 
       if (!token) {
         setLoading(false);
@@ -53,7 +57,8 @@ export function AuthProvider({
         const profile = await getProfile();
         setUser(profile);
       } catch {
-        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("user");
         setUser(null);
       } finally {
         setLoading(false);
@@ -68,8 +73,8 @@ export function AuthProvider({
   ): Promise<User> => {
     const result = await loginUser(data);
 
-    localStorage.setItem("token", result.token);
-    localStorage.setItem(
+    sessionStorage.setItem("token", result.token);
+    sessionStorage.setItem(
       "user",
       JSON.stringify(result.user)
     );
@@ -86,8 +91,8 @@ export function AuthProvider({
   };
 
   const logout = (): void => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("user");
     setUser(null);
   };
 

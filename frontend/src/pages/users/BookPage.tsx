@@ -72,10 +72,14 @@ export default function BookPage() {
       if (axios.isAxiosError(error)) {
         setMessage(
           error.response?.data?.message ||
-            "Unable to borrow this book"
+            `Unable to borrow this book (${error.response?.status ?? "network error"})`
         );
       } else {
-        setMessage("Unable to borrow this book");
+        setMessage(
+          error instanceof Error
+            ? error.message
+            : "Unable to borrow this book"
+        );
       }
     } finally {
       setBorrowingId(null);
@@ -175,9 +179,17 @@ export default function BookPage() {
                     className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-sky-200 hover:shadow-xl"
                 >
                   <div className="relative flex h-48 items-center justify-center overflow-hidden bg-slate-900">
-                    <div className="display-font text-7xl text-sky-300 transition duration-300 group-hover:scale-110">
-                      {book.title.charAt(0).toUpperCase()}
-                    </div>
+                    {book.imageUrl || book.image_url ? (
+                      <img
+                        src={book.imageUrl || book.image_url}
+                        alt={`${book.title} cover`}
+                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="display-font text-7xl text-sky-300 transition duration-300 group-hover:scale-110">
+                        {book.title.charAt(0).toUpperCase()}
+                      </div>
+                    )}
 
                     <span className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-indigo-700">
                       {book.category || "General"}

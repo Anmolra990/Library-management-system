@@ -73,7 +73,7 @@ export default function ManageBooksPage() {
           <tbody className="divide-y divide-slate-100">
             {books.map((book) => (
               <tr key={book.id} className="transition hover:bg-slate-50">
-                <td className="px-5 py-4"><div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-50 font-bold text-sky-700" aria-hidden="true">{book.title.charAt(0).toUpperCase()}</span><div><p className="font-semibold text-slate-900">{book.title}</p><p className="mt-0.5 text-xs text-slate-500">by {book.author}</p></div></div></td>
+                <td className="px-5 py-4"><div className="flex items-center gap-3"><span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-sky-50 font-bold text-sky-700" aria-hidden="true">{book.imageUrl || book.image_url ? <img src={book.imageUrl || book.image_url} alt="" className="h-full w-full object-cover" /> : book.title.charAt(0).toUpperCase()}</span><div><p className="font-semibold text-slate-900">{book.title}</p><p className="mt-0.5 text-xs text-slate-500">by {book.author}</p></div></div></td>
                 <td className="px-5 py-4 text-slate-600">{book.category || "General"}</td>
                 <td className="px-5 py-4"><span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${book.availableCopies > 0 ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700"}`}>{book.availableCopies > 0 ? `${book.availableCopies} of ${book.totalCopies} available` : "Unavailable"}</span></td>
                 <td className="px-5 py-4 text-right">

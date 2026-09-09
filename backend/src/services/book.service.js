@@ -9,7 +9,8 @@ class BookService {
             author,
             category,
             isbn,
-            quantity
+            quantity,
+            image_url
         } = data;
 
         if (!title || !author || quantity === undefined) {
@@ -27,7 +28,8 @@ class BookService {
             author,
             category,
             isbn,
-            quantity
+            quantity,
+            image_url
         );
 
         return {
@@ -72,7 +74,8 @@ class BookService {
             author,
             category,
             isbn,
-            quantity
+            quantity,
+            image_url
         } = data;
 
         await BookModel.updateBook(
@@ -81,7 +84,8 @@ class BookService {
             author,
             category,
             isbn,
-            quantity
+            quantity,
+            image_url
         );
 
         return await BookModel.getBookById(id);

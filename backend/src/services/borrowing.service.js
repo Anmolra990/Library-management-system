@@ -34,9 +34,12 @@ class BorrowingService {
             bookId
         );
 
+        const quantityUpdate = await BorrowingModel.updateBookQuantity(bookId);
 
-
-        await BorrowingModel.updateBookQuantity(bookId);
+        if (quantityUpdate.affectedRows !== 1) {
+            await BorrowingModel.deleteBorrowing(result.insertId);
+            throw new Error("Book is no longer available");
+        }
 
 
         return {

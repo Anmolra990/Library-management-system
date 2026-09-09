@@ -6,6 +6,9 @@ export interface Book {
   ISBN?: string;
   category?: string;
   description?: string;
+  imageUrl?: string;
+  imageFile?: File;
+  image_url?: string;
   totalCopies: number;
   availableCopies: number;
   status?: "ACTIVE" | "INACTIVE";
@@ -19,6 +22,7 @@ export interface BookInput {
   isbn: string;
   category: string;
   description?: string;
+  imageUrl?: string;
   totalCopies: number;
   availableCopies: number;
 }
